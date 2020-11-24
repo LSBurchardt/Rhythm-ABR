@@ -17,6 +17,6 @@ examplary Literature
 1) Jewett,D.L.; Romano, M.N. and Williston, J.S. (1970). Human auditory evoked potentials: Possible 465brain stem components detected on the scalp. Science 167, 1517–1518
 2) Corwin, J.T.; Bullock, T.H. and Schweitzer, J. (1982). The auditory brain stem response in five 451vertebrate classes. Electroencephalography and Clinical Neurophysiology 54, 629–641
 3) Knörnschild M, Feifel M, Kalko EKV. Mother-offspring recognition in the bat Carollia perspicillata. Animal Behaviour. 2013;86:941-8.
-4) 1.	Källstrand J, Lewander T, Baghdassarian E, Nielzén S. A new method for analyzing auditory brain-stem response waveforms using a moving-minimum subtraction procedure of digitized analog recordings. Neuropsychiatric disease and treatment. 2014;10:1011-6.
-5) 1.	Lv J, Simpson DM, Bell SL. Objective detection of evoked potentials using a bootstrap technique. Med Eng Phys. 2007;29(2):191-8.
+4) Källstrand J, Lewander T, Baghdassarian E, Nielzén S. A new method for analyzing auditory brain-stem response waveforms using a moving-minimum subtraction procedure of digitized analog recordings. Neuropsychiatric disease and treatment. 2014;10:1011-6.
+5) Lv J, Simpson DM, Bell SL. Objective detection of evoked potentials using a bootstrap technique. Med Eng Phys. 2007;29(2):191-8.
 
