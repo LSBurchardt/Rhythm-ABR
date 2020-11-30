@@ -68,20 +68,26 @@ Rnaso_mean <- Rnaso_new %>%
 Sbil_mean <- allspecies %>%
   filter(species == "sbil") %>% 
   group_by(modrate) %>% 
-  select(modrate, `integral`) %>% 
-  summarise_all(mean)
+  #select(modrate, `integral`) %>% 
+  select(modrate, scaledpeak) %>% 
+  #summarise_all(mean)
+  summarise_all(median)
 
 laurita_mean <- allspecies %>%
   filter(species == "laur") %>% 
   group_by(modrate) %>% 
-  select(modrate, `integral`) %>% 
-  summarise_all(mean)
+  #select(modrate, `integral`) %>% 
+  select(modrate, scaledpeak) %>% 
+  #summarise_all(mean)
+  summarise_all(median)
 
 Cper_mean <- allspecies %>%
   filter(species == "cper") %>% 
   group_by(modrate) %>% 
-  select(modrate, `integral`) %>% 
-  summarise_all(mean)
+  #select(modrate, `integral`) %>%
+  select(modrate, scaledpeak) %>% 
+  #summarise_all(mean)
+  summarise_all(median)
 
 Slep_mean <- Slep_new %>%
   filter(rms_conf >= 0.95) %>% 
@@ -141,6 +147,11 @@ Drot_mean <- drot_new %>%
 allspecies_meanperspecies <- allspecies %>% 
   group_by(species, modrate) %>%  
   summarise_at(c("scaledpeak", "integral"), mean)
+
+allspecies_medianperspecies <- allspecies %>% 
+  group_by(species, modrate) %>%  
+  summarise_at(c("scaledpeak", "integral"), median)
+
 
 # all data rms
 
@@ -241,7 +252,8 @@ b<-list(title="Stimulus Presentation Rate [Hz] -- Rhythm Perception",
 
 lineplot_m_1 <- Cper_mean  %>% 
   #filter(modrate <= 30) %>% 
-  ggplot(aes(x=modrate, y=`integral` ))+
+  #ggplot(aes(x=modrate, y=`integral` ))+
+  ggplot(aes(x=modrate, y= scaledpeak ))+
   geom_line(color= "white")+
   geom_point(shape= 15, color = "darkblue")+
   scale_x_continuous(limits= c(0,100),breaks= c(0,2,4,6,8,10,12,14,16,18,20,22,24,26,28,30,40,60,80,100))+
@@ -281,7 +293,8 @@ lineplot_m_2 <- Drot_mean %>%
   
   lineplot_m_4<-laurita_mean %>% 
     #filter(modrate <= 30) %>% 
-  ggplot(aes(x=modrate, y= `integral`))+
+  #ggplot(aes(x=modrate, y= `integral`))+
+    ggplot(aes(x=modrate, y= scaledpeak ))+
     geom_line(color= "white")+
     ggtitle(expression(italic("Lonchorhina aurita")))+
     geom_point(shape= 15, color = "darkblue")+
@@ -362,7 +375,8 @@ lineplot_m_2 <- Drot_mean %>%
   
   lineplot_m_10 <- Sbil_mean %>% 
     #filter(modrate <= 30) %>% 
-  ggplot(aes(x=modrate, y= `integral`))+
+    #ggplot(aes(x=modrate, y= `integral`))+
+    ggplot(aes(x=modrate, y=scaledpeak ))+
     geom_line(color = "white")+
     ggtitle(expression(italic("Saccopteryx bilineata")))+
     geom_point(shape= 15, color = "darkblue")+
