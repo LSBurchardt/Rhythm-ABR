@@ -52,7 +52,27 @@ conf_over_sig <- Cper_Bad Segeberg %>%
 
 
 ##### secondary datasets, more detail, more comparisson
+  
+  # Bad Segeberg data, significant results, only short stimuli, mean by ID
+  conf_over_sig_short_perID <- Cper_BadSegeberg %>% 
+  filter(rms_conf >= 0.95 & std_conf >= 0.95) %>% 
+  filter(typ == "IC short") %>% 
+  mutate(modrate = as.factor(modrate)) %>% 
+  group_by(modrate, ID, sex) %>% 
+  summarise_at("integral", median)
 
+# Bad Segeberg data, significant results, only long stimuli, , mean by ID
+conf_over_sig_long_perID <- Cper_BadSegeberg %>% 
+  filter(rms_conf >= 0.95 & std_conf >= 0.95) %>% 
+  filter(typ == "IC long") %>% 
+  mutate(modrate = as.factor(modrate)) %>% 
+  group_by(modrate, ID, sex) %>% 
+  summarise_at("integral", median)
+  
+  
+  
+  
+###### 3. level of detail   
 conf_over_sig_short_male <- Cper_BadSegeberg %>% 
   filter(rms_conf >= 0.95 & std_conf >= 0.95) %>% 
   filter(typ == "IC short") %>% 
@@ -117,7 +137,7 @@ rms_median <- median(conf_over_sig_long$rms, na.rm = TRUE)
  # resulting dataset: data_comparison_P_BS 
  #resulting plot: p4, lineplot with 5 parameter variations
  
- sub1 <- allspecies_meanperspecies %>% 
+ sub1 <- allspecies_medianperspecies %>% 
    filter(species <= "cper") %>% 
    filter( modrate == 6 | modrate == 24 | modrate == 40 ) %>% 
    mutate(type = "Panama", sex = "male") %>% 
@@ -125,26 +145,30 @@ rms_median <- median(conf_over_sig_long$rms, na.rm = TRUE)
  
  sub2 <- conf_over_sig_short %>% 
    group_by(modrate, sex) %>% 
-   summarise_at("integral", mean) %>% 
+   #summarise_at("integral", mean) %>%
+   summarise_at("integral", median) %>%
    filter(sex == "male") %>% 
    mutate(type = "BS_short_male", species = "cper", modrate = as.numeric(as.character(modrate))) 
  
 sub3 <- conf_over_sig_short %>% 
      group_by(modrate, sex) %>% 
-     summarise_at("integral", mean) %>% 
+     #summarise_at("integral", mean) %>% 
+    summarise_at("integral", median) %>%
      filter(sex == "fem") %>% 
    mutate(type = "BS_short_female", species = "cper", modrate = as.numeric(as.character(modrate))) 
    
    
  sub4 <- conf_over_sig_long %>% 
    group_by(modrate, sex) %>% 
-   summarise_at("integral", mean) %>% 
+   #summarise_at("integral", mean) %>%
+   summarise_at("integral", median) %>%
    filter(sex== "male") %>% 
    mutate(type = "BS_long_male", species = "cper", modrate = as.numeric(as.character(modrate)))
    
  sub5 <- conf_over_sig_long %>% 
    group_by(modrate, sex) %>% 
-   summarise_at("integral", mean) %>% 
+   #summarise_at("integral", mean) %>%
+   summarise_at("integral", median) %>%
    filter(sex== "fem") %>% 
    mutate(type = "BS_long_female", species = "cper", modrate = as.numeric(as.character(modrate)))
  
@@ -153,8 +177,10 @@ data_comparison_BS_short <- rbind(sub2, sub3)
 data_comparison_BS_long<- rbind(sub4, sub5)
 
 
+
+
 # lab titles
-a<-list(title="Integrated Brainstem Response Strength [μV]",
+a<-list(title="MMS Integral [μV]",
         showticklabels= TRUE)
 b<-list(title="Presentation Rate [Hz]", 
         showticklabels = TRUE)
@@ -167,7 +193,7 @@ p5 <- data_comparison_BS_short %>%
   ggtitle("Natural Stimuli: 2ms")+
   geom_point(shape= 15)+
   scale_x_continuous(breaks= c(6,25,44))+
-  scale_y_continuous(limits = c(120, 420))+
+  scale_y_continuous(limits = c(20, 1200))+
   xlab(b)+ 
   ylab(a)+
   theme_dark()+
@@ -179,7 +205,7 @@ p6 <- data_comparison_BS_long %>%
   ggtitle("Natural Stimuli: 8ms")+
   geom_point(shape= 15)+
   scale_x_continuous(breaks= c(6,25,44))+
-  scale_y_continuous(limits = c(120, 420))+
+  scale_y_continuous(limits = c(20, 1200))+
   scale_color_hue(labels = c("Female", "Male"))+
   guides(color=guide_legend("Sex"))+
   xlab(b)+ 
@@ -194,7 +220,7 @@ p7 <- sub1 %>%
   geom_point(shape= 15, color = "#33CCCC")+
   scale_fill_manual(values=c("#33CCCC"))+
   scale_x_continuous(breaks= c(6,24,40))+
-  scale_y_continuous(limits = c(120, 420))+
+  scale_y_continuous(limits = c(20, 1200))+
   xlab(b)+ 
   ylab(a)+
   theme_dark()+
@@ -206,7 +232,7 @@ p4 <- data_comparison_P_BS %>%
   ggtitle("ABR response of C. perspicillata to artificial and natural stimuli")+
   geom_point(shape= 15)+
   scale_x_continuous(breaks= c(6,24,25,40,44))+
-  #scale_y_continuous(limits = c(-0.02, 0.01))+
+  scale_y_continuous(limits = c(20, 1200))+
   xlab(b)+ 
   ylab(a)+
   theme_dark()
@@ -217,29 +243,33 @@ p0 <- Cper_panama %>%
   #geom_violin()+
   geom_boxplot()+
   scale_fill_manual(values=c("#33CCCC"))+
-  scale_y_continuous(limits = c(40,260))+
-  geom_jitter(shape = 16, size = 1.5, color = "black")+
-  labs(title="Exp1: Artificial Stimuli",x="Stimulus Presentation Rate [Hz]", y= "Brainstem Response Strength [µV]")+
+  scale_y_continuous(limits = c(20,1200))+
+  #geom_jitter(shape = 16, size = 1.5, color = "black")+
+  geom_jitter(shape = 1, size = 0.6)+
+  labs(title="Exp1: Artificial Stimuli",x="Stimulus Presentation Rate [Hz]", y= "MMS Integral [µV]")+
   theme(legend.position = "none", axis.title=element_text(size=16,face="bold"), axis.text = element_text(size = 12), plot.title=element_text(size=16, face="bold"))
  
 
-p1 <- conf_over_sig_short %>% 
+
+p1 <- conf_over_sig_short_perID %>% 
+  group_by(ID) %>% 
   ggplot(aes(x=modrate, y=integral, fill = sex)) + 
   #geom_violin()+
   geom_boxplot()+
   scale_fill_manual(values=c("#FF6666", "#33CCCC" ))+
-  scale_y_continuous(limits = c(40,260))+
+  scale_y_continuous(limits = c(20,1200))+
   geom_jitter(shape = 1, size = 0.6)+
-  labs(title="Exp2: Natural Stimuli, 2 ms",x="Stimulus Presentation Rate [Hz]", y= "Brainstem Response Strength [µV]")+
+  labs(title="Exp2: Natural Stimuli, 2 ms",x="Stimulus Presentation Rate [Hz]", y= "MMS Integral [µV]")+
   theme(legend.position = "none", axis.title=element_text(size=16,face="bold"), axis.text = element_text(size = 12), plot.title=element_text(size=16, face="bold"))
 
 
-p2 <- conf_over_sig_long %>% 
+p2 <- conf_over_sig_long_perID %>% 
+  group_by(ID) %>% 
   ggplot(aes(x=modrate, y=integral, fill = sex)) + 
   geom_boxplot()+
-  scale_y_continuous(limits = c(40,260))+
+  scale_y_continuous(limits = c(20,1200))+
   geom_jitter(shape= 1, size= 0.6)+
-  labs(title="Exp2: Natural Stimuli, 8 ms",x="Stimulus Presentation Rate [Hz]", y= "Brainstem Response Strength [µV]")+
+  labs(title="Exp2: Natural Stimuli, 8 ms",x="Stimulus Presentation Rate [Hz]", y= "MMS Integral [µV]")+
   scale_fill_manual(name = "Sex",
                     labels = c("Female", "Male"),
                     values=c("#FF6666", "#33CCCC" ))+
