@@ -13,7 +13,7 @@ library(latex2exp)
 
 # 01: load data   ---------------------------------------------------------------
 
-allspecies <- read_delim("ABR_data/combined_nov2020_scaledpeak_panama_allspecies.csv", delim = ";")
+allspecies <- read_delim("combined_nov2020_scaledpeak_panama_allspecies.csv", delim = ";")
 
 laurita_new <- read_delim("Rhythm_ABR_laur_movmin_rms_integral.csv", delim= ";")
 cpersp_new <- read_delim("ABR_data/new analysis with rms/Rhythm_ABR_Rhythm_ABR_cper_movmin_RMS_09112020_forRanalysis.csv", delim = ";")
@@ -153,13 +153,17 @@ allspecies_medianperspecies <- allspecies %>%
   summarise_at(c("scaledpeak", "integral"), median)
 
 
-# all data rms
+# all data mean
 
 allspecies_mean <- allspecies %>% 
   group_by(modrate) %>% 
   summarise_at(c("scaledpeak", "integral"), mean)
-  
 
+# all data median 
+  
+allspecies_median <- allspecies %>% 
+  group_by(modrate) %>% 
+  summarise_at(c("scaledpeak", "integral"), median)
 
 # 03: boxplots ------------------------------------------------------------------
 
@@ -428,41 +432,46 @@ lineplot_m_2 <- Drot_mean %>%
   lineplot_m_11
   lineplot_m_12
   
-  lineplot_m_13<- allspecies_mean %>% 
+  lineplot_m_13<- allspecies_median %>% 
     #filter(modrate <= 30) %>% 
     ggplot(aes(x=modrate, y= scaledpeak))+
     geom_line(color= "white")+
-    ggtitle("all 12 bat species testes, scaled integral")+
+    #ggtitle("all 12 bat species testes, scaled integral")+
     geom_point(shape= 15, color = "darkblue")+
     scale_x_continuous(breaks= c(6,8,10,12,14,16,18,20,22,24,26,28,30,40,60,80,100))+
     #scale_y_continuous(limits = c(-0.02, 0.01))+
     xlab(b)+ 
     ylab(a)+
-    theme_dark()
+    theme_dark()+
+    theme(legend.position = "none", axis.title=element_text(size=16,face="bold"), axis.text = element_text(size = 12))
+  #with font: Times new roman 
+  #theme(legend.position = "none", axis.title=element_text(size=16,face="bold", family = "serif"), axis.text = element_text(size = 12, family = "serif))
   
   lineplot_m_14<- allspecies_meanperspecies %>% 
     #filter(modrate <= 30) %>% 
     ggplot(aes(x=modrate, y= scaledpeak, colour = species, fill = species))+
     geom_line(color = "white")+
-    ggtitle("all 12 bat species testes, scaled integral")+
+    #ggtitle("all 12 bat species testes, scaled integral")+
     geom_point(shape= 15)+
     scale_x_continuous(breaks= c(6,8,10,12,14,16,18,20,22,24,26,28,30,40,60,80,100))+
     #scale_y_continuous(limits = c(-0.02, 0.01))+
     xlab(b)+ 
     ylab(a)+
-    theme_dark()
+    theme_dark()+
+    theme(legend.position = "none", axis.title=element_text(size=16,face="bold"), axis.text = element_text(size = 12))
   
   lineplot_m_15<- allspecies_meanperspecies %>% 
     #filter(modrate <= 30) %>% 
     ggplot(aes(x=modrate, y= integral, colour = species, fill = species))+
     geom_line(color = "white")+
-    ggtitle("all 12 bat species testes, scaled integral")+
+    #ggtitle("all 12 bat species testes, scaled integral")+
     geom_point(shape= 15)+
     scale_x_continuous(breaks= c(6,8,10,12,14,16,18,20,22,24,26,28,30,40,60,80,100))+
     #scale_y_continuous(limits = c(-0.02, 0.01))+
     xlab(b)+ 
     ylab(a)+
-    theme_dark()
+    theme_dark()+
+    theme(legend.position = "none", axis.title=element_text(size=16,face="bold"), axis.text = element_text(size = 12))
   
   lineplot_m_16 <- ggplot()+
     geom_line(data = laurita_mean, aes(x = modrate, y = `scaled peak`), color = "white")+
